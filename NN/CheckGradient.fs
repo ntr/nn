@@ -28,7 +28,7 @@ exception Error of string
 
 let safeSingle m = 
     let x,y = size m
-    if (x <> 1) then raise (Error(sprintf "expected 1 raw but %d present" x))
+    if (x <> 1) then raise (Error(sprintf "expected 1 row but %d present" x))
     if (y <> 1) then raise (Error(sprintf "expected 1 column but %d present" y))
     m.[0,0]
 

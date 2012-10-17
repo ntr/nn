@@ -5,15 +5,16 @@ open CheckGradient
 open MatrixUtils
 open GradCost
 
-let allocateThetas thetas layers=
+let allocateThetas thetasVector layers=
     let thetaAlloc (prevVal, totalAllocated, thetasList) value =
         match prevVal with
         | 0 -> (value, totalAllocated, thetasList) //allocating theta only on a second list element
-        | _ -> (value, totalAllocated + value * (prevVal+1), (reshape thetas totalAllocated value (prevVal+1)) :: thetasList)
+        | _ -> (value, totalAllocated + value * (prevVal+1), (reshape thetasVector totalAllocated value (prevVal+1)) :: thetasList)
     let (_,_, thAll) = layers |> List.fold thetaAlloc (0,0,[])
     thAll
 
-let calcAZ thAll X = 
+let calcLayers thAll X = 
+    //calculates nn layers for theta
     let getAZ (A,Z) value = //calculates a(i-1) and z(i) for ith layer
         let nextZ a theta =
             a * (!theta)
@@ -23,18 +24,20 @@ let calcAZ thAll X =
         a::A, nextZ a value::Z
     thAll |> List.rev|> List.fold getAZ ([], []) 
 
-let nnCost layers X y lambda thetas = 
+let nnCost layers X y lambda thetasVector = 
+    //calculates cost in last layer with regularization
     let calculateCost zippedHY lambda th m = 
-      let GetJ (yii,hii) = 
-        let tmp = (hii |> Vector.map (fun x -> log(1.0-x))).[0]
-        let v =  (1.0 / float m) * (-(!yii) * (hii |> Vector.map log) - !(1.0.-yii) * (hii |> Vector.map (fun x -> log(1.0-x)))) 
+      let GetJ (yi,hi) = 
+        let tmp = (hi |> Vector.map (fun x -> log(1.0-x))).[0]
+        let v =  (1.0 / float m) * (-(!yi) * (hi |> Vector.map log) - !(1.0.-yi) * (hi |> Vector.map (fun x -> log(1.0-x)))) 
         v.[0]
 
       let reg = th |> List.sumBy (fun m -> m |> Matrix.map (fun i -> i*i) |> Matrix.sum)
       let J = (zippedHY |> List.sumBy GetJ) + ((lambda * reg)/(2.0 * float m))
       J
 
-    let calculateGrad zippedHY m a z thAll= 
+    //calculates gradient using backpropagation algorithm
+    let calculateGrad zippedHY m a z thetasAll thetasZeroed= 
         let lastD = zippedHY 
                     |> Seq.map (fun (y,h)-> h-(y|> Matrix.toVector) ) 
                     |> Seq.map Vector.toArray 
@@ -50,21 +53,19 @@ let nnCost layers X y lambda thetas =
                 getThetaGradient nextD a_ z_ t_ th_ @ [calcGrad d a th]
             | (a::a_,[],t::t_,th::th_) -> [calcGrad d a th]
             | _ -> []
-        getThetaGradient lastD a (z |>Seq.skip 1 |> Seq.toList) thAll (thAll |> List.map setFirstColZeros) 
+        getThetaGradient lastD a (z |>Seq.skip 1 |> Seq.toList) thetasAll thetasZeroed 
     
-    let thAll = allocateThetas thetas layers    
-    let (a,z) = calcAZ thAll X
+    let thetas = allocateThetas thetasVector layers    
+    let (a,z) = calcLayers thetas X
     let h = z |> List.head |> Matrix.map sigmoid
-    let m = X.NumRows
+    let examplesCount = X.NumRows
     let num_labels = layers |> Seq.last
-    let th = thAll |> List.map setFirstColZeros
+    let thetasZeroed = thetas |> List.map setFirstColZeros
 
     let zippedHY = [0..num_labels-1] 
-                    |> List.map h.Column
-                    |> List.zip ([0..num_labels-1] 
-                    |> List.map (fun i -> y |> Matrix.map (fun el -> if el = float i then 1.0 else 0.0))) //each item in list is an outcome for each experiment
-
-    (calculateCost zippedHY lambda th m, unroll (calculateGrad zippedHY m a z thAll))
+                    |> List.map (fun i -> (y |> Matrix.map (fun el -> if el = float i then 1.0 else 0.0)), h.Column(i))
+                    
+    (calculateCost zippedHY lambda thetasZeroed examplesCount, unroll (calculateGrad zippedHY examplesCount a z thetas thetasZeroed))
 
 let trainNN X y layers lambda numiters = 
     let rnd =
@@ -74,19 +75,17 @@ let trainNN X y layers lambda numiters =
             r.NextDouble() * 2.0 * eps - eps
         fun x y -> Matrix.init x y getv
 
-    let l1 = layers |> Seq.skip 1
     let initialThetas = layers |> Seq.windowed 2 |> Seq.map (fun arr -> rnd arr.[1] (arr.[0] + 1)) |> Seq.toList |> unroll
     let (thRes, lst,ind) = checkGradient (nnCost layers X y lambda) initialThetas (Some numiters)
     thRes
 
-let accuracy thRes X (y:matrix) layers =
-    let thAll = allocateThetas thRes layers    
-    let (a,z) = calcAZ thAll X 
+let accuracy thetasVector X (y:matrix) layers =
+    let thetas = allocateThetas thetasVector layers    
+    let (a,z) = calcLayers thetas X 
     let h2 = z |> List.head |> Matrix.map sigmoid
 
     let getMax i (maxind, maxv) v = 
         if v>=maxv then (i,v) else (maxind, maxv)
     seq { for i in 0..h2.NumRows-1 do
             yield h2.Row i |> RowVector.transpose |> Vector.foldi getMax (-1,-1.0) } 
-        |> Seq.map (fst)
-        |> Seq.mapi (fun i x ->  if (y.[i,0] = float x) then 1.0 else 0.0)  |> Seq.average
+        |> Seq.mapi (fun i x ->  if (y.[i,0] = float (fst x)) then 1.0 else 0.0)  |> Seq.average
