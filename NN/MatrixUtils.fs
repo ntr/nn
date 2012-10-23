@@ -3,6 +3,11 @@
 open System.IO
 open System
 
+let shuffleRows (X:matrix)= 
+    let rnd = Random()
+    let pos = [0..X.NumRows-1] |> List.sortBy (fun i -> rnd.Next()) 
+    Matrix.init X.NumRows X.NumCols (fun x y -> X.[pos.[x],y])
+
 let size (M:matrix) = 
     (M.NumRows, M.NumCols)
 

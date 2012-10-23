@@ -22,7 +22,7 @@ let calcLayers thAll X =
                 | [] -> addBiasColumn X
                 | z::_ -> z |> Matrix.map sigmoid |> addBiasColumn
         a::A, nextZ a value::Z
-    thAll |> List.rev|> List.fold getAZ ([], []) 
+    thAll |> List.rev|> List.fold getAZ ([], []) //todo lot of time here - review
 
 let nnCost layers X y lambda thetasVector = 
     //calculates cost in last layer with regularization
