@@ -1,0 +1,20 @@
+﻿<Window x:Class="NumbersDemo.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="MainWindow" Height="362" Width="598">
+    <Grid Margin="0,0,15,14">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="245*"/>
+            <ColumnDefinition Width="239*"/>
+        </Grid.ColumnDefinitions>
+        <Canvas x:Name="viewCanvas" HorizontalAlignment="Right" Height="200" Margin="0,29,20,0" VerticalAlignment="Top" Width="200" Grid.Column="1"/>
+        <Canvas x:Name="drawingCanvas" HorizontalAlignment="Left" Height="200" Margin="30,29,0,0" VerticalAlignment="Top" Width="200" MouseMove="DrawingCanvasMouseMove" Background="{DynamicResource {x:Static SystemColors.AppWorkspaceBrushKey}}">
+            <Path Width="122" Height="105" Canvas.Left="12" Canvas.Top="18" Stretch="Fill" Data="F1 M 31,21C 33.7614,21 36,23.2386 36,26C 36,28.7614 33.7615,30.9999 30.9797,31L 24.5,31L 28,27L 26,27L 26,23L 23,23L 23,27L 21,27L 24.5,31L 14.5,31C 13.1193,31 12,29.8807 12,28.5C 12,27.2758 12.8799,26.2571 14.0417,26.0419L 14,25.5C 14,23.6206 15.4814,22.0871 17.3402,22.0035C 18.1629,19.6713 20.3863,18 23,18C 25.4816,18 27.6113,19.5065 28.5245,21.6549C 29.2543,21.2381 30.0994,21 31,21 Z " />
+        </Canvas>
+        <Button x:Name="ClearButton" Content="Clear" HorizontalAlignment="Left" Margin="30,234,0,0" VerticalAlignment="Top" Width="75" RenderTransformOrigin="0.96,0.545" Click="ClearButtonClick" Height="22"/>
+        <Button x:Name="TestButton" Content="Test" HorizontalAlignment="Left" Margin="110,234,0,0" VerticalAlignment="Top" Width="75" Click="TestButtonClick" Height="22"/>
+        <Label x:Name="prediction" Content="" HorizontalAlignment="Left" Margin="41,261,0,-14" VerticalAlignment="Top" Width="189" Height="26"/>
+        <Label Content="Use the app to classify entered numbers from 0 to 4" HorizontalAlignment="Left" VerticalAlignment="Top" Width="303" Grid.ColumnSpan="2" Height="26"/>
+
+    </Grid>
+</Window>

@@ -1,7 +1,11 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2012
-Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "NN", "NN\NN.fsproj", "{5C685E8E-098A-4E3F-A9EB-E7EB8DD15BE7}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NumbersDemo", "src\NumbersDemo\NumbersDemo.csproj", "{CC1D8E80-A52D-4C51-8225-B114F8E203DA}"
+EndProject
+Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "NNCore", "src\NNCore\NNCore.fsproj", "{BDE39645-F8B9-499F-B857-C04FA56A99E1}"
+EndProject
+Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "NNTrain", "src\NNTrain\NNTrain.fsproj", "{DD880A43-BAB7-45D2-967F-467EF22E7442}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -9,10 +13,18 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{5C685E8E-098A-4E3F-A9EB-E7EB8DD15BE7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{5C685E8E-098A-4E3F-A9EB-E7EB8DD15BE7}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{5C685E8E-098A-4E3F-A9EB-E7EB8DD15BE7}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{5C685E8E-098A-4E3F-A9EB-E7EB8DD15BE7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CC1D8E80-A52D-4C51-8225-B114F8E203DA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CC1D8E80-A52D-4C51-8225-B114F8E203DA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CC1D8E80-A52D-4C51-8225-B114F8E203DA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CC1D8E80-A52D-4C51-8225-B114F8E203DA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BDE39645-F8B9-499F-B857-C04FA56A99E1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BDE39645-F8B9-499F-B857-C04FA56A99E1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BDE39645-F8B9-499F-B857-C04FA56A99E1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BDE39645-F8B9-499F-B857-C04FA56A99E1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DD880A43-BAB7-45D2-967F-467EF22E7442}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DD880A43-BAB7-45D2-967F-467EF22E7442}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DD880A43-BAB7-45D2-967F-467EF22E7442}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DD880A43-BAB7-45D2-967F-467EF22E7442}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
