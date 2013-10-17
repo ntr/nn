@@ -17,4 +17,4 @@ Solution consists of the following projects:
 
 ###Building/Starting###
 
-Before building project you should run Update-Package command in Nuget package manager console, after that referenced libraries will be downloaded. 
+Before building project you should restore Nuget packages referenced in solution. 
